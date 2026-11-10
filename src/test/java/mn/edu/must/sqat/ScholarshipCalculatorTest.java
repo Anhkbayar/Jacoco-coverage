@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Хэсэг A: хэвийн урсгалын (happy path) тестүүд.
  * Хэсэг B: CFG-ийн хамрагдаагүй ирмэгүүдийг хаах тестүүд (Branch/Line 100%).
+ * Хэсэг C: gpa() давталтын 0 / 1 / 2+ удаагийн тестүүд.
+ * Хэсэг D: letterGrade() зааг утгын тестүүд.
  */
 class ScholarshipCalculatorTest {
 
@@ -144,5 +146,64 @@ class ScholarshipCalculatorTest {
     @DisplayName("scholarship(2.5, 20, false) -> 0")
     void scholarshipNone() {
         assertEquals(0, calc.scholarship(2.5, 20, false));
+    }
+
+    // ---------------- Хэсэг C: gpa() давталт 0 / 1 / 2+ ----------------
+    // 0 удаа: gpaEmptyThrows (хоосон массив) ба gpaNullThrows (null) — Хэсэг B-д бичсэн.
+
+    @Test
+    @DisplayName("loop 1x: gpa([95]) -> 4.0")
+    void gpaLoopOnce() {
+        assertEquals(4.0, calc.gpa(new double[]{95}), 1e-9);
+    }
+
+    @Test
+    @DisplayName("loop 2+x: gpa([95, 85, 75, 65]) -> 2.5")
+    void gpaLoopMany() {
+        assertEquals(2.5, calc.gpa(new double[]{95, 85, 75, 65}), 1e-9);
+    }
+
+    // ---------------- Хэсэг D: letterGrade зааг утгууд ----------------
+
+    @Test
+    @DisplayName("boundary: letterGrade(60) -> D")
+    void letterGradeBoundary60IsD() {
+        assertEquals("D", calc.letterGrade(60));
+    }
+
+    @Test
+    @DisplayName("boundary: letterGrade(59.99) -> F")
+    void letterGradeBoundary5999IsF() {
+        assertEquals("F", calc.letterGrade(59.99));
+    }
+
+    @Test
+    @DisplayName("boundary: letterGrade(69.99) -> D")
+    void letterGradeBoundary6999IsD() {
+        assertEquals("D", calc.letterGrade(69.99));
+    }
+
+    @Test
+    @DisplayName("boundary: letterGrade(0) -> F")
+    void letterGradeBoundary0IsF() {
+        assertEquals("F", calc.letterGrade(0));
+    }
+
+    @Test
+    @DisplayName("boundary: letterGrade(100) -> A")
+    void letterGradeBoundary100IsA() {
+        assertEquals("A", calc.letterGrade(100));
+    }
+
+    @Test
+    @DisplayName("boundary: letterGrade(89.99) -> B")
+    void letterGradeBoundary8999IsB() {
+        assertEquals("B", calc.letterGrade(89.99));
+    }
+
+    @Test
+    @DisplayName("boundary: letterGrade(90) -> A")
+    void letterGradeBoundary90IsA() {
+        assertEquals("A", calc.letterGrade(90));
     }
 }
