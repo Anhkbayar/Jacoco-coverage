@@ -4,9 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Хэсэг A: зөвхөн хэвийн урсгалын (happy path) тестүүд.
+ * Хэсэг A: хэвийн урсгалын (happy path) тестүүд.
+ * Хэсэг B: CFG-ийн хамрагдаагүй ирмэгүүдийг хаах тестүүд (Branch/Line 100%).
  */
 class ScholarshipCalculatorTest {
 
@@ -40,5 +42,107 @@ class ScholarshipCalculatorTest {
     @DisplayName("scholarship(3.5, 13, false) -> 70")
     void scholarshipSeventy() {
         assertEquals(70, calc.scholarship(3.5, 13, false));
+    }
+
+    // ---------------- Хэсэг B: letterGrade ----------------
+
+    @Test
+    @DisplayName("letterGrade(-1) -> IllegalArgumentException")
+    void letterGradeNegativeThrows() {
+        assertThrows(IllegalArgumentException.class, () -> calc.letterGrade(-1));
+    }
+
+    @Test
+    @DisplayName("letterGrade(101) -> IllegalArgumentException")
+    void letterGradeAbove100Throws() {
+        assertThrows(IllegalArgumentException.class, () -> calc.letterGrade(101));
+    }
+
+    @Test
+    @DisplayName("letterGrade(75) -> C")
+    void letterGradeC() {
+        assertEquals("C", calc.letterGrade(75));
+    }
+
+    @Test
+    @DisplayName("letterGrade(65) -> D")
+    void letterGradeD() {
+        assertEquals("D", calc.letterGrade(65));
+    }
+
+    @Test
+    @DisplayName("letterGrade(50) -> F")
+    void letterGradeF() {
+        assertEquals("F", calc.letterGrade(50));
+    }
+
+    // ---------------- Хэсэг B: gpa ----------------
+
+    @Test
+    @DisplayName("gpa(null) -> IllegalArgumentException")
+    void gpaNullThrows() {
+        assertThrows(IllegalArgumentException.class, () -> calc.gpa(null));
+    }
+
+    @Test
+    @DisplayName("gpa([]) -> IllegalArgumentException")
+    void gpaEmptyThrows() {
+        assertThrows(IllegalArgumentException.class, () -> calc.gpa(new double[]{}));
+    }
+
+    @Test
+    @DisplayName("gpa([75, 65, 50]) -> (2+1+0)/3 = 1.0")
+    void gpaOfCDandF() {
+        assertEquals(1.0, calc.gpa(new double[]{75, 65, 50}), 1e-9);
+    }
+
+    // ---------------- Хэсэг B: scholarship ----------------
+
+    @Test
+    @DisplayName("scholarship(-0.1, 15, false) -> IllegalArgumentException")
+    void scholarshipNegativeGpaThrows() {
+        assertThrows(IllegalArgumentException.class, () -> calc.scholarship(-0.1, 15, false));
+    }
+
+    @Test
+    @DisplayName("scholarship(4.1, 15, false) -> IllegalArgumentException")
+    void scholarshipGpaAbove4Throws() {
+        assertThrows(IllegalArgumentException.class, () -> calc.scholarship(4.1, 15, false));
+    }
+
+    @Test
+    @DisplayName("scholarship(3.5, -1, false) -> IllegalArgumentException")
+    void scholarshipNegativeCreditsThrows() {
+        assertThrows(IllegalArgumentException.class, () -> calc.scholarship(3.5, -1, false));
+    }
+
+    @Test
+    @DisplayName("scholarship(3.9, 16, true) -> 0")
+    void scholarshipViolation() {
+        assertEquals(0, calc.scholarship(3.9, 16, true));
+    }
+
+    @Test
+    @DisplayName("scholarship(3.9, 12, false) -> 70 (gpa ok, credits < 15)")
+    void scholarshipHighGpaLowCredits() {
+        assertEquals(70, calc.scholarship(3.9, 12, false));
+    }
+
+    @Test
+    @DisplayName("scholarship(3.5, 10, false) -> 50 (gpa >= 3.4, credits < 12)")
+    void scholarshipMidGpaLowCredits() {
+        assertEquals(50, calc.scholarship(3.5, 10, false));
+    }
+
+    @Test
+    @DisplayName("scholarship(3.2, 20, false) -> 50")
+    void scholarshipFifty() {
+        assertEquals(50, calc.scholarship(3.2, 20, false));
+    }
+
+    @Test
+    @DisplayName("scholarship(2.5, 20, false) -> 0")
+    void scholarshipNone() {
+        assertEquals(0, calc.scholarship(2.5, 20, false));
     }
 }
