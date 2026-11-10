@@ -3,6 +3,24 @@
 - **Оюутны нэр:** Z.Ankhbayar
 - **Оюутны код:** B232270029
 
+### Орчин
+
+```
+$ java -version
+openjdk version "25.0.4.1" 2026-08-18
+OpenJDK Runtime Environment (build 25.0.4.1+1-1-26.04.4-Ubuntu)
+OpenJDK 64-Bit Server VM (build 25.0.4.1+1-1-26.04.4-Ubuntu, mixed mode, sharing)
+```
+
+```
+$ mvn -version
+Apache Maven 3.9.12
+Maven home: /usr/share/maven
+Java version: 25.0.4.1, vendor: Ubuntu, runtime: /usr/lib/jvm/java-25-openjdk-amd64
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "7.0.0-42-generic", arch: "amd64", family: "unix"
+```
+
 ## Хэсэг A: Happy path тестүүд ба эхний хэмжилт
 
 Тест: `src/test/java/mn/edu/must/sqat/ScholarshipCalculatorTest.java` — зөвхөн хэвийн урсгалын 5 тест:
@@ -119,7 +137,8 @@
 ```
 
 **Алдаа:** `letterGrade`-д `if (score > 60) return "D";` гэж бичсэн байсан, харин спецификаци "60-69.99 → D" гэж заадаг. Тиймээс яг 60
-оноо `"F"` болж байсан (off-by-one). Засвар: `>` → `>=` (тусдаа commit: *Fix letterGrade: > 60 -> >= 60, spec says 60 is D*).
+оноо `"F"` болж байсан (off-by-one). Засвар: `>` → `>=` (тусдаа commit `0b6b470`: *Fix letterGrade: > 60 -> >= 60, spec says 60 is D*). Тестүүд засвараас өмнөх
+commit `9fd9be9`-д унасан төлөвтэй хадгалагдсан.
 
 **Засварын дараа** (`results/mvn-verify-final.txt`, `results/jacoco-final.csv`): `Tests run: 30, Failures: 0`, BUILD SUCCESS;
 Line 25/25 = 100%, Branch 41/41 = 100%.
